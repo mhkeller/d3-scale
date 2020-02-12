@@ -66,9 +66,9 @@ export function zoomLog(domain, scale, sign) {
 }
 
 export function zoomPow(domain, anchor, scale, exponent) {
-  return zoom(domain, anchor, scale, pow(exponent), pow(1 / exponent));
+  return zoom(domain, scale, pow(exponent), pow(1 / exponent));
 }
 
 export function zoomSymlog(domain, anchor, scale, constant) {
-  return zoom(domain, anchor, scale, symlog(constant), symexp(constant));
+  return zoom(domain, scale, symlog(constant), symexp(constant));
 }

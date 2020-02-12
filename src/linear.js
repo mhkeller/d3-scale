@@ -2,6 +2,8 @@ import {ticks, tickIncrement} from "d3-array";
 import continuous, {copy} from "./continuous.js";
 import {initRange} from "./init.js";
 import tickFormat from "./tickFormat.js";
+import {zoomLinear} from './padTransforms.js';
+import peek from './peek.js';
 
 export function linearish(scale) {
   var domain = scale.domain;
@@ -55,6 +57,20 @@ export function linearish(scale) {
 
     return scale;
   };
+
+  scale.pad = function(padding = [0, 0]) {
+    const range = scale.range();
+    const span = Math.abs(peek(range) - range[0]);
+    const dmn = domain().slice();
+    const paddedDomain = dmn.slice();
+    for (let i = 0; i < padding.length; i += 1) {
+      const sign = i === 0 ? -1 : 1;
+      paddedDomain[i] = zoomLinear(dmn, padding[i] / span, sign);
+    }
+
+    scale.domain(paddedDomain);
+    return scale;
+  }
 
   return scale;
 }

@@ -509,3 +509,47 @@ tape("linear.copy() returns a copy with changes to the unknown value are isolate
   test.equal(x.unknown(), 2);
   test.end();
 });
+
+tape("linear.pad() sets default padding of [0, 0]", function (test) {
+  var s = scale.scaleLinear().pad();
+  test.deepEqual(s.domain(), [0, 1]);
+  test.deepEqual(s.range(), [0, 1]);
+  test.equal(s.clamp(), false);
+  test.equal(s.unknown(), undefined);
+  test.deepEqual(s.interpolate()({
+    array: ["red"]
+  }, {
+    array: ["blue"]
+  })(0.5), {
+    array: ["rgb(128, 0, 128)"]
+  });
+  test.end();
+});
+
+tape("linear.pad([0, 10]) sets the padding", function (test) {
+  var s = scale.scaleLinear()
+    .domain([-100, 100])
+    .range([0, 100])
+    .pad([0, 10]);
+  test.deepEqual(s.domain(), [-100, 120]);
+  test.deepEqual(s.range(), [0, 100]);
+  test.end();
+});
+
+tape("linear.pad([10]) sets the padding", function (test) {
+  var s = scale.scaleLinear()
+    .domain([-100, 100])
+    .range([0, 100])
+    .pad([10]);
+  test.deepEqual(s.domain(), [-120, 100]);
+  test.end();
+});
+
+tape("linear.pad([5, 5]) sets the padding", function (test) {
+  var s = scale.scaleLinear()
+    .domain([-100, 100])
+    .range([0, 100])
+    .pad([5, 5]);
+  test.deepEqual(s.domain(), [-110, 110]);
+  test.end();
+});

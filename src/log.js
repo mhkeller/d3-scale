@@ -3,6 +3,8 @@ import {format} from "d3-format";
 import nice from "./nice.js";
 import {copy, transformer} from "./continuous.js";
 import {initRange} from "./init.js";
+import {zoomLog} from './padTransforms.js';
+import peek from './peek.js';
 
 function transformLog(x) {
   return Math.log(x);
@@ -129,6 +131,20 @@ export function loggish(transform) {
       ceil: function(x) { return pows(Math.ceil(logs(x))); }
     }));
   };
+
+  scale.pad = function (padding = [0, 0]) {
+    const range = scale.range();
+    const span = Math.abs(peek(range) - range[0]);
+    const dmn = domain().slice();
+    const paddedDomain = dmn.slice();
+    for (let i = 0; i < padding.length; i += 1) {
+      const sign = i === 0 ? -1 : 1;
+      paddedDomain[i] = zoomLog(dmn, padding[i] / span, sign);
+    }
+
+    scale.domain(paddedDomain);
+    return scale;
+  }
 
   return scale;
 }

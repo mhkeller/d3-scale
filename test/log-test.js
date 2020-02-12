@@ -462,6 +462,17 @@ tape("log.ticks() returns the empty array when the domain is degenerate", functi
   test.end();
 });
 
+tape("log.pad([0, 10]) sets the padding", function (test) {
+  var s = scale
+    .scaleLog()
+    .domain([-100, 100])
+    .range([0, 100])
+    .pad([0, 10]);
+  test.deepEqual(s.domain(), [100.00000000000004, 251.18864315095806]);
+  test.end();
+});
+
+
 function round(x) {
   return Math.round(x * 1e12) / 1e12;
 }
